@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyEstes Authentication & Authorization</title>
+    <script src="./bower_components/bower-webfontloader/webfont.js"></script>
+    <script src="./bower_components/snap.svg/dist/snap.svg-min.js" ></script>
+    <script src="./bower_components/underscore/underscore-min.js" ></script>
+    <script src="./bower_components/js-sequence-diagrams/dist/sequence-diagram-min.js" ></script>
+</head>
+<body>
+    <div id="diagram"></div>
+    <span id="diagram_text" style="display: none">
+        Title: MyEstes Authentication & Authorization
+        Note over Angular: Angular Submit Login Form to Oauth2
+        Angular->Oauth2: POST /oauth/token
+        Note right of Angular: Form Data(\nusername: TESTADMIN\npassword: ****\ngrant_type: password\nclient_id: MY_ESTES_APP\n)
+        Note over Oauth2: Oauth2 forward the \nrequest to Login API
+        Oauth2-->Login API: POST /authenticate
+        Note right of Oauth2: sample request\n{\n"password":"*****",\n"userName":"TESTADMIN"\n}
+        Note over Login API: call estesrtgy2.meg10q100 \nfor authentication \nand estesrtgy2.qnq400 \nfor authorized apps\n Returns UserInfo, \nAuthorized Apps
+        Login API-->>Oauth2: Return User info, Authorized Apps\n 
+        Note left of Login API: Sameple Success Response\n{\n"error":{"errorCode":"","message":null},\n"session":"2678062",\n"hash":"****",\n"accountCode":"5068692",\n"accountType":"L",\n"appNames":["REQUESTINF","RSG10O100","ECN200"]\n}\n ____________________________\nSample Error Response\n------------------\n{"error":\n{"errorCode":"GTE1061",\n"message":"We're sorry, the username and/or password \nyou have entered is invalid. Please try again."\n},\n"session":"",\n"hash":"",\n"accountCode":null,\n"accountType":null,\n"appNames":null\n}
+        Note over Oauth2: If the response is success from Login API,\n Oauth2 Generate Token, Persist Token,\n User Info, Authorized Apps \n in Oauth2 SQL Database, \nelse return error response.
+        Oauth2-->Angular: Return success or error response
+        Note left of Oauth2: sample success response from Oauth2: \n{\n"access_token":"930523af-a186-47cd-9716-293daed45655",\n"token_type":"bearer",\n"expires_in":604799,\n"scope":"QUN200 WRVIEWING ****",\n"accountCode":"5068692",\n"session":"2678062",\n"accountType":"L",\n"hash":"****",\n"authorities":[{"authority":"ROLE_L"}],\n"username":"TESTADMIN"\n}\n_____________________________\nSample error response\n{\n"error":"invalid_grant",\n"error_description":"We are sorry, the username and/or password\n you have entered is invalid.\n Please try again."\n}\n
+        Note over Angular: If the response is error,\n Angular display the error message,\n else Angular take the token,\npersist token with userinfo,\n in the browser session\n and check application permission. \n If the user has permission \nto the specific app,\n Angular is ready \nto make further API calls.\n If the user doesn't have the permission,\n it redirects to the error page \nand display message that \nuser doesn't have any authorzization.
+        Angular->MyEstes API: Angular calls MyEstes API passing token as header\n{Authorization: Bearer c15940b6-1661-4a06-a767-7b0700697ac5}
+        Note over MyEstes API: MyEstes API Interceptor \n take request,\nretrieve the token
+        MyEstes API-->Oauth2: GET /check_token?token={token}
+        Note left of MyEstes API: MyEstes API call Oauth2 check token service \nto validate token & retrieve user info.
+        Note over Oauth2: Oauth2 take the token\n retrieve userinfo\nauthorized apps
+        Oauth2-->MyEstes API: Send Token Response
+        Note right of Oauth2: send token information\n _________________________\nsample successful response\n{"accountCode":"5068692",\n"session":"2678062",\n"scope":["QUN200","WRVIEWING"],\n"accountType":"L",\n"active":true,\n"exp":1629918958,\n"authorities":[{"authority":"ROLE_L"}],\n"hash":"****",\n"client_id":"MY_ESTES_APP",\n"username":"TESTADMIN"}\n_______________________________\nSample error response\n{\nerror: "invalid_token",\nerror_description: "Token was not recognised"\n}
+        Note over MyEstes API: If the response from \nOauth2 is error,\n immediately return the error \nresponse to Angular
+        MyEstes API-->Angular: Send Error Response
+        Note over MyEstes API: If the response from \nOauth2 is success,\nit retrieves user info,\n check user app permission
+        Note over MyEstes API: If the user doesn't have \npermission to the app,\nreturns unauthorized response.
+        MyEstes API-->Angular: Send Unauthorized Error Response
+        Note over MyEstes API: If the user is authenticated & authorized, \nProcess the request & send response
+        MyEstes API-->Angular: Send success or error response depening the validation rules/bussiness rules.
+    </span>
+    <script type="text/javascript">
+        const dgt= document.getElementById('diagram_text').innerText;
+        console.log(dgt)
+        var d = Diagram.parse(dgt);
+        var options = { theme: 'simple' };
+        d.drawSVG('diagram', options);
+    </script>
+</body>
+</html>
