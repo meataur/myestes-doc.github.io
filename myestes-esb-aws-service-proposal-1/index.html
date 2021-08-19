@@ -13,21 +13,21 @@
 <body>
     <div id="diagram"></div>
     <span id="diagram_text" style="display: none">
-        Title: MyEstes Pega Service
-        Angular->Pega API: Angular calls Pega API passing token as header\n{Authorization: Bearer c15940b6-1661-4a06-a767-7b0700697ac5}
-        Note over Pega API: Pega API Interceptor \n take request,\nretrieve the token
-        Note right of Pega API: Pega API call Oauth2 check token service \nto validate token & retrieve user info.
-        Pega API-->Oauth2: GET /check_token?token={token}
+        Title: MyEstes ESB/AWS Service Proposal 1
+        Angular->ESB/AWS API: Angular calls ESB/AWS API passing token as header\n{Authorization: Bearer c15940b6-1661-4a06-a767-7b0700697ac5}
+        Note over ESB/AWS API: ESB/AWS API Interceptor \n take request,\nretrieve the token
+        Note right of ESB/AWS API: ESB/AWS API calls Oauth2 check token service \nto validate token & retrieve user info.
+        ESB/AWS API-->Oauth2: GET /check_token?token={token}
         Note over Oauth2: Oauth2 take the token\n retrieve userinfo\nauthorized apps
-        Oauth2-->Pega API: Send Token Response
+        Oauth2-->ESB/AWS API: Send Token Response
         Note left of Oauth2: send token information\n _________________________\nsample successful response\n{"accountCode":"5068692",\n"session":"2678062",\n"scope":["QUN200","WRVIEWING"],\n"accountType":"L",\n"active":true,\n"exp":1629918958,\n"authorities":[{"authority":"ROLE_L"}],\n"hash":"****",\n"client_id":"MY_ESTES_APP",\n"username":"TESTADMIN"}\n_______________________________\nSample error response\n{\nerror: "invalid_token",\nerror_description: "Token was not recognised"\n}
-        Note over Pega API: If the response from \nOauth2 is error,\n immediately return the error \nresponse to Angular
-        Pega API-->Angular: Send Error Response
-        Note over Pega API: If the response from \nOauth2 is success,\nit retrieves user info,\n check user app permission
-        Note over Pega API: If the user doesn't have \npermission to the app,\nreturns unauthorized response.
-        Pega API-->Angular: Send Unauthorized Error Response
-        Note over Pega API: If the user is authenticated & authorized, \nProcess the request & send response
-        Pega API-->Angular: Send success or error response based on the validation rules/bussiness rules.
+        Note over ESB/AWS API: If the response from \nOauth2 is error,\n immediately return the error \nresponse to Angular
+        ESB/AWS API-->Angular: Send Error Response
+        Note over ESB/AWS API: If the response from \nOauth2 is success,\nit retrieves user info,\n check user app permission
+        Note over ESB/AWS API: If the user doesn't have \npermission to the app,\nreturns unauthorized response.
+        ESB/AWS API-->Angular: Send Unauthorized Error Response
+        Note over ESB/AWS API: If the user is authenticated & authorized, \nProcess the request & send response
+        ESB/AWS API-->Angular: Send success or error response based on the validation rules/bussiness rules.
     </span>
     <script type="text/javascript">
         const dgt= document.getElementById('diagram_text').innerText;
