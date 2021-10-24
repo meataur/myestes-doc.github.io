@@ -27,7 +27,7 @@
             rect rgb(255,20,255,0.1)
             Note over B: MyEstes Dispute API call <br/>Oauth2 check token service <br/>to validate token <br/>& retrieve user info.
             rect rgb(255, 0, 0, 0.15)
-            Note over B: If the token is invalid or expired <br/> return unauthenticated response.
+            Note over B: If the token is invalid or expired <br/> return Unauthenticated Response.
             B-->>A: Send unauthenticated response
             Note right of A: Response Status Code: 400<br/>Response Payload: <br/>{<br/> &nbsp; "error": "invalid_token",<br/> &nbsp; "error_description": "Token was not recognised"<br/>}
             end
@@ -41,7 +41,7 @@
             end
             rect rgb(0, 255, 0, 0.1)
             B-->> C: MyEstes Dispute API calls Denodo Dispute Service.
-            Note right of B: Request Method: POST<br/> Request Endpoint: Denodo REST Service Endpoint <br/>Request header:<br/> &nbsp; &nbsp; &nbsp; username: ${username}<br/> &nbsp; &nbsp; &nbsp; accountType: ${userAccountType}<br/> &nbsp; &nbsp; &nbsp; accountNumer: ${userAccountNumber}<br/>Request Payload:<br/> &nbsp; &nbsp; &nbsp; ['0058043338','1231234567','0058043339']
+            Note right of B: Request Method: POST<br/> Request Endpoint: Denodo REST Service Endpoint <br/>Request header:<br/> &nbsp; &nbsp; &nbsp; username: ${username}<br/> &nbsp; &nbsp; &nbsp; accountType: ${userAccountType}<br/> &nbsp; &nbsp; &nbsp; accountNumber: ${userAccountNumber}<br/>Request Payload:<br/> &nbsp; &nbsp; &nbsp; ['0058043338','1231234567','0058043339']
             end
             Note over C: Denodo processes the request
             rect rgb(255, 0, 0, 0.15)
