@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyEstes Authentication & Authorization</title>
+    <script src="../bower_components/bower-webfontloader/webfont.js"></script>
+    <script src="../bower_components/snap.svg/dist/snap.svg-min.js" ></script>
+    <script src="../bower_components/underscore/underscore-min.js" ></script>
+    <script src="../bower_components/js-sequence-diagrams/dist/sequence-diagram-min.js" ></script>
+</head>
+<body>
+    <div id="diagram"></div>
+    <span id="diagram_text" style="display: none">
+        Title: MyEstes ESB/AWS Service
+        Angular->MyEstes API: Angular calls MyEstes API passing Oauth2 token as header\n{Authorization: Bearer c15940b6-1661-4a06-a767-7b0700697ac5}
+        Note over MyEstes API: MyEstes API retrieves the username from token then retrieves password from AS400
+        MyEstes API--> ESB/AWS API: MyEstes API call /authenticate and passed Username and Password to authenticate
+        ESB/AWS API-->MyEstes API: AWS/AWS API returns a token which is base64 encrypted with Username and Password
+        Note over MyEstes API: MyEstes API persist the token in cache to call any subsequent API calls
+        MyEstes API-->ESB/AWS API: MyEstes API calls ESB/AWS Service
+        ESB/AWS API-->MyEstes API: ESB/AWS Service returns response
+        MyEstes API-->Angular: MyEstes API returns response to Angular
+    </span>
+    <script type="text/javascript">
+        const dgt= document.getElementById('diagram_text').innerText;
+        console.log(dgt)
+        var d = Diagram.parse(dgt);
+        var options = { theme: 'simple' };
+        d.drawSVG('diagram', options);
+    </script>
+</body>
+</html>
