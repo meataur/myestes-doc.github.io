@@ -22,9 +22,22 @@
             participant A as Angular (MyEstes UI)
             participant B as MyEstes Dispute API
             participant C as Denodo Dispute Service
+            Note over A: Angular takes multiple PROs as input
+            Note over A: Angular validates the PROs<br/> using PRO's pattern (10 digit PRO)<br/>as part of UI validation.
+            rect rgb(255, 0, 0, 0.15)
+            Note over A: if any PRO is invalid,<br/>angular will display error message
+            end
+            Note over A: if the PROs are valid,<br/>angular calls MyEstes Dispute API
             rect rgb(0, 255, 0, 0.15)
             A->>B: Angular calls MyEstes Dispute API
             Note right of A: Request Method: POST<br/> Request Endpoint: /search <br/><br/>Request Payload:<br/> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ['0058043338','1231234567','0058043339']
+            end
+            Note over B: MyEstes Dispute API validates <br/>the PROs using pattern validation<br/>(ex. check if 10 digit PRO)
+            rect rgb(255, 0, 0, 0.15)
+            Note over B: If any PRO is invalid <br/>(ex. Not a 10 digit PRO)<br/>, returns error response<br/>
+            B-->>A: Send invalid PRO error response
+            Note left of B: Note left of B: Response status code: 400<br/>Response Payload:<br/>&nbsp; &nbsp;[<br/>&nbsp; &nbsp;&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"errorCode": "error",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"message": "Not a valid PRO",<br/>&nbsp; &nbsp;&nbsp; &nbsp;}<br/>&nbsp; &nbsp;]
+            Note over A: Angular will display error message.
             end
             rect rgb(0, 255, 0, 0.1)
             B-->> C: MyEstes Dispute API calls Denodo Dispute Service.
@@ -49,7 +62,11 @@
             rect rgb(0, 255, 0, 0.1)
             B-->>A: Send the success response to Angular
             Note left of B:Response status code: 200<br/>Response Payload:<br/>[<br/>&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;"proNumber": "005804338",<br/>&nbsp; &nbsp;&nbsp; &nbsp;"pending": 5,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"resolved": 1,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"total": 6,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"cases": [<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"caseId": "D-941559",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"status": "Pending",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"submittedDate": "12/16/2021",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountNumber": "0122717",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountName": "Dominion Fiber Technologies",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"sumissionNotes": "Hello, please remove the liftgates ...",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"resolutionNotes": "Review is still pendings"<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;},<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"caseId": "D-941557",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"status": "Pending",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"submittedDate": "12/16/2021",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountNumber": "0122717",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountName": "Dominion Fiber Technologies",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"sumissionNotes": "Hello, please remove the liftgates ...",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"resolutionNotes": "Review is still pendings"<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}<br/>&nbsp; &nbsp;&nbsp; &nbsp;]<br/>&nbsp; &nbsp;},<br/>&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;"proNumber": "1231234567",<br/>&nbsp; &nbsp;&nbsp; &nbsp;"pending": 5,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"resolved": 1,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"total": 6,<br/>&nbsp; &nbsp;&nbsp; &nbsp;"cases": [<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"caseId": "D-970597",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"status": "Pending",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"submittedDate": "12/16/2021",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountNumber": "0122717",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountName": "Dominion Fiber Technologies",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"sumissionNotes": "Hello, please remove the liftgates ...",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"resolutionNotes": "Review is still pendings"<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;},<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"caseId": "D-970593",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"status": "Pending",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"submittedDate": "12/16/2021",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountNumber": "0122717",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"accountName": "Dominion Fiber Technologies",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"sumissionNotes": "Hello, please remove the liftgates ...",<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;"resolutionNotes": "Review is still pendings"<br/>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}<br/>&nbsp; &nbsp;&nbsp; &nbsp;]<br/>&nbsp; &nbsp;}<br/>]
+            end
+            rect rgb(255, 0, 0, 0.15)
             Note over A: if any PRO is missing in the results,<br/>Angular will prepare the error message <br/>and will display as error message.
+            end
+            rect rgb(0, 255, 0, 0.1)
             Note over A: Angular will display the results.
             end
             end
